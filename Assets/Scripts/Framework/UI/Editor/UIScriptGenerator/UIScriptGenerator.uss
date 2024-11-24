@@ -1,0 +1,7 @@
+﻿.function-area {
+    margin: 5px;
+    padding: 10px;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 5px;
+}
