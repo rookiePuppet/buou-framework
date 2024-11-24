@@ -1,7 +1,7 @@
-using Game.Framework;
-using Game.Framework.EventSystem;
-using Game.Framework.Tweening;
-using Game.Framework.UI;
+using BuouFramework;
+using BuouFramework.EventSystem;
+using BuouFramework.Tweening;
+using BuouFramework.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

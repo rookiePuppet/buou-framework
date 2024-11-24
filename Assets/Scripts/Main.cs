@@ -1,7 +1,7 @@
 ﻿using System;
-using Game.Framework;
-using Game.Framework.EventSystem;
-using Game.Framework.UI;
+using BuouFramework.EventSystem;
+using BuouFramework.Logging;
+using BuouFramework.UI;
 using Game.UI;
 using UnityEngine;
 
@@ -51,7 +51,7 @@ namespace Game
         }
     }
 
-    public class ButtonClickEvent : Framework.EventSystem.Event
+    public class ButtonClickEvent : BuouFramework.EventSystem.Event
     {
     }
 

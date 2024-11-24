@@ -1,0 +1,11 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using BuouFramework.UI;
+
+namespace Game.UI
+{{
+    public class {0} : {0}Base
+    {{
+
+    }}
+}}
