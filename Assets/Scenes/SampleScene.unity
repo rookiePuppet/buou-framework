@@ -563,17 +563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 077cc4e2a8574ab6b4dbb2c5155e0fca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testMusics:
-  - {fileID: 8300000, guid: f5df88227c97c1a40b82c54b711f4f86, type: 3}
-  - {fileID: 8300000, guid: f4d7e6f7a9a5dc94cae95f025ffc81e1, type: 3}
-  - {fileID: 8300000, guid: 68db71da3f965874fbf8c6646524d4e9, type: 3}
-  testSounds:
-  - {fileID: 8300000, guid: 438aa3c1164a6b04c86363d56d293891, type: 3}
-  - {fileID: 8300000, guid: e561c9f0cfea72e4db68ca897eb8bf2c, type: 3}
-  - {fileID: 8300000, guid: 45dd760e7266b434688409fe32085836, type: 3}
-  - {fileID: 8300000, guid: 3e80b7f792dfd5940a009b8c92026119, type: 3}
-  - {fileID: 8300000, guid: c80e1e0c2aff10746ac5fa8b1f4c1680, type: 3}
-  duration: 2
+  time: 2
 --- !u!4 &1890011386
 Transform:
   m_ObjectHideFlags: 0

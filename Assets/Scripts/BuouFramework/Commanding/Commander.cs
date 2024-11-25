@@ -4,16 +4,16 @@ namespace BuouFramework.Commanding
 {
     public static class Commander
     {
-        public static async void Execute(ICommand command)
+        public static void Execute(ICommand command)
         {
-            await command.Execute();
+            command.Execute();
         }
 
-        public static async void Execute(IEnumerable<ICommand> commands)
+        public static void Execute(IEnumerable<ICommand> commands)
         {
             foreach (var command in commands)
             {
-                await command.Execute();
+                command.Execute();
             }
         }
     }

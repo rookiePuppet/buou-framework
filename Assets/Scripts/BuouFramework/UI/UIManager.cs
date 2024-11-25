@@ -11,30 +11,25 @@ namespace BuouFramework.UI
 {
     public class UIManager : Singleton<UIManager>
     {
-        private Canvas _canvas;
-        private Transform _bottomLayer;
-        private Transform _middleLayer;
-        private Transform _topLayer;
-
         /// <summary>
         /// 用于缓存UI界面的字典
         /// <para>Key->界面类型名称，Value->界面脚本</para>
         /// </summary>
         private readonly Dictionary<string, View> _views = new();
 
+        private readonly Canvas _canvas;
+        private readonly Dictionary<int, Transform> _layerTransforms = new();
+        private readonly IUIManagerInitializer _initializer = new UIManagerInitializerFromAddressables();
+
         private UIManager()
         {
             // 初始化画布
-            var handle = Addressables.LoadAssetAsync<GameObject>("Canvas");
-            var canvasObj = Object.Instantiate(handle.WaitForCompletion());
+            var canvasObj = _initializer.ProvideCanvasObject();
             Object.DontDestroyOnLoad(canvasObj);
             _canvas = canvasObj.GetComponent<Canvas>();
-            handle.Release();
 
             // 初始化摄像机
-            handle = Addressables.LoadAssetAsync<GameObject>("UICamera");
-            var cameraObj = Object.Instantiate(handle.WaitForCompletion());
-            handle.Release();
+            var cameraObj = _initializer.ProvideCameraObject();
             Object.DontDestroyOnLoad(cameraObj);
             var camera = cameraObj.GetComponent<Camera>();
             // 处理URP管线中的摄像机层叠，将UI摄像机叠加到主摄像机上
@@ -43,25 +38,22 @@ namespace BuouFramework.UI
             _canvas.worldCamera = camera;
 
             // 初始化EventSystem
-            handle = Addressables.LoadAssetAsync<GameObject>("EventSystem");
-            var eventSystemObj = Object.Instantiate(handle.WaitForCompletion());
+            var eventSystemObj = _initializer.ProvideEventSystemObject();
             Object.DontDestroyOnLoad(eventSystemObj);
 
-            // 获取用于分层Transform
-            _bottomLayer = canvasObj.transform.GetChild(0);
-            _middleLayer = canvasObj.transform.GetChild(1);
-            _topLayer = canvasObj.transform.GetChild(2);
+            // 初始化层级
+            InitializeLayer();
         }
 
         /// <summary>
         /// 打开UI动画时长
         /// </summary>
-        public float OpenViewDuration { get; set; } = 0.6f;
+        public float OpenViewDuration { get; set; } = IViewEffect.ShortDuration;
 
         /// <summary>
         /// 关闭UI动画时长
         /// </summary>
-        public float CloseViewDuration { get; set; } = 0.6f;
+        public float CloseViewDuration { get; set; } = IViewEffect.ShortDuration;
 
         /// <summary>
         /// 通过异步加载并打开一个UI界面
@@ -89,7 +81,7 @@ namespace BuouFramework.UI
             view.gameObject.SetActive(true);
             view.Show();
 
-            effect ??= new FadeEffect(FadeType.In);
+            effect ??= new FadeEffect(FadeType.In, OpenViewDuration);
             effect.ApplyTo(view);
         }
 
@@ -106,7 +98,7 @@ namespace BuouFramework.UI
                 return;
             }
 
-            var effect = new FadeEffect(FadeType.Out);
+            var effect = new FadeEffect(FadeType.Out, CloseViewDuration);
             await effect.ApplyTo(view);
 
             view.Hide();
@@ -143,7 +135,7 @@ namespace BuouFramework.UI
         /// </summary>
         /// <typeparam name="T">界面类型</typeparam>
         /// <returns></returns>
-        public bool IsShow<T>() where T : View
+        public bool IsShowing<T>() where T : View
         {
             var viewName = typeof(T).Name;
             return _views.TryGetValue(viewName, out var view) && view.gameObject.activeInHierarchy;
@@ -175,13 +167,22 @@ namespace BuouFramework.UI
         /// <returns></returns>
         private Transform GetLayerTransform(UILayer layer)
         {
-            return layer switch
+            return _layerTransforms.TryGetValue((int)layer, out var transform) ? transform : _canvas.transform;
+        }
+
+        private void InitializeLayer()
+        {
+            foreach (int layer in Enum.GetValues(typeof(UILayer)))
             {
-                UILayer.Bottom => _bottomLayer,
-                UILayer.Middle => _middleLayer,
-                UILayer.Top => _topLayer,
-                _ => _canvas.transform
-            };
+                var transform = new GameObject(Enum.GetName(typeof(UILayer), layer)).AddComponent<RectTransform>();
+                transform.SetParent(_canvas.transform, false);
+                transform.anchorMin = Vector2.zero;
+                transform.anchorMax = Vector2.one;
+                transform.offsetMin = Vector2.zero;
+                transform.offsetMax = Vector2.zero;
+
+                _layerTransforms[layer] = transform;
+            }
         }
     }
 }

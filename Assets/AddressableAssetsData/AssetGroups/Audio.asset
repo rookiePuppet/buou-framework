@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Audio
   m_GUID: b63819547145ec2459bbe73a158f03c9
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: a72be6dbb33ae1d48b44895f4943bee6
+    m_Address: Bards_Solo__1_Min_Harp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bb91be596ff49ba428453b9015eea714, type: 2}
   m_SchemaSet:

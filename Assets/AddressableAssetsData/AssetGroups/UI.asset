@@ -19,24 +19,24 @@ MonoBehaviour:
     m_Address: EventSystem
     m_ReadOnly: 0
     m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+    FlaggedDuringContentUpdateRestriction: 1
   - m_GUID: 3a54cedf4143f55418d2b102a036c419
     m_Address: Canvas
     m_ReadOnly: 0
     m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4efec69764aa62a4aa6f2e816e223b6a
-    m_Address: TestView
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+    FlaggedDuringContentUpdateRestriction: 1
   - m_GUID: 67a0c937fc2039141aa6eaf4ff736f3b
     m_Address: MainView
     m_ReadOnly: 0
     m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+    FlaggedDuringContentUpdateRestriction: 1
   - m_GUID: 9ec2adda41d11c149a9492309c97be5a
     m_Address: UICamera
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 1
+  - m_GUID: b973fdf41074f8d4180563d1cb182b7b
+    m_Address: UI
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
