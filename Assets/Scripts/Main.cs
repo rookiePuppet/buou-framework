@@ -1,5 +1,5 @@
 ﻿using System;
-using BuouFramework.Control.FiniteStateMachine;
+using BuouFramework.AIControl.FiniteStateMachine;
 using BuouFramework.Logging;
 using BuouFramework.Schedule;
 using BuouFramework.UI;
@@ -28,8 +28,6 @@ namespace Game
                 .AddAnyTransition(jumpState, new FuncPredicate(() => _isJumping))
                 .AddTransition(jumpState, idleState, new FuncPredicate(() => !_isJumping))
                 .SetCurrentState(idleState);
-
-            UIManager.Instance.Open<MainView>();
         }
 
         private void Update()

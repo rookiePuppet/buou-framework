@@ -1,4 +1,4 @@
-﻿namespace BuouFramework.Control.FiniteStateMachine
+﻿namespace BuouFramework.AIControl.FiniteStateMachine
 {
     public interface ITransition
     {

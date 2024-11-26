@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BuouFramework.Control.FiniteStateMachine
+namespace BuouFramework.AIControl.FiniteStateMachine
 {
     public interface IPredicate
     {

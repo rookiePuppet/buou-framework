@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BuouFramework.Control.FiniteStateMachine
+namespace BuouFramework.AIControl.FiniteStateMachine
 {
     public class StateNode
     {

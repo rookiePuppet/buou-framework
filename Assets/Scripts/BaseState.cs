@@ -1,4 +1,4 @@
-﻿using BuouFramework.Control.FiniteStateMachine;
+﻿using BuouFramework.AIControl.FiniteStateMachine;
 using BuouFramework.Logging;
 using UnityEngine;
 

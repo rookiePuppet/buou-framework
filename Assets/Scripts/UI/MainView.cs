@@ -3,6 +3,7 @@ using BuouFramework.EventSystem;
 using BuouFramework.Schedule;
 using BuouFramework.Tweening;
 using BuouFramework.UI;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

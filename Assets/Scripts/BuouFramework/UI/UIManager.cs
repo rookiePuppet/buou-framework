@@ -19,17 +19,16 @@ namespace BuouFramework.UI
 
         private readonly Canvas _canvas;
         private readonly Dictionary<int, Transform> _layerTransforms = new();
-        private readonly IUIManagerInitializer _initializer = new UIManagerInitializerFromAddressables();
 
         private UIManager()
         {
             // 初始化画布
-            var canvasObj = _initializer.ProvideCanvasObject();
+            var canvasObj = LoadAndInstantiate("Canvas");
             Object.DontDestroyOnLoad(canvasObj);
             _canvas = canvasObj.GetComponent<Canvas>();
 
             // 初始化摄像机
-            var cameraObj = _initializer.ProvideCameraObject();
+            var cameraObj = LoadAndInstantiate("UICamera");
             Object.DontDestroyOnLoad(cameraObj);
             var camera = cameraObj.GetComponent<Camera>();
             // 处理URP管线中的摄像机层叠，将UI摄像机叠加到主摄像机上
@@ -38,7 +37,7 @@ namespace BuouFramework.UI
             _canvas.worldCamera = camera;
 
             // 初始化EventSystem
-            var eventSystemObj = _initializer.ProvideEventSystemObject();
+            var eventSystemObj = LoadAndInstantiate("EventSystem");
             Object.DontDestroyOnLoad(eventSystemObj);
 
             // 初始化层级
@@ -183,6 +182,14 @@ namespace BuouFramework.UI
 
                 _layerTransforms[layer] = transform;
             }
+        }
+
+        private static GameObject LoadAndInstantiate(string name)
+        {
+            var handle = Addressables.LoadAssetAsync<GameObject>(name);
+            var obj = Object.Instantiate(handle.WaitForCompletion());
+            handle.Release();
+            return obj;
         }
     }
 }
