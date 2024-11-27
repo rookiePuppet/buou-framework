@@ -4,7 +4,6 @@ namespace BuouFramework.Tweening
 {
     public interface ITween
     {
-        event Action Updating;
         event Action Completed;
         event Action EveryTimeCompleted;
         

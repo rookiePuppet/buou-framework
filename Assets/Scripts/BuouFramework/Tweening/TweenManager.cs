@@ -6,6 +6,10 @@ namespace BuouFramework.Tweening
 {
     public class TweenManager : MonoSingleton<TweenManager>
     {
+#if UNITY_EDITOR
+        [SerializeField] private int activeTweenCount;
+#endif
+
         private readonly Dictionary<string, ITween> _activeTweens = new();
         private readonly List<ITween> _removingTweens = new();
 
@@ -29,6 +33,10 @@ namespace BuouFramework.Tweening
 
                 _removingTweens.Clear();
             }
+
+#if UNITY_EDITOR
+            activeTweenCount = _activeTweens.Count;
+#endif
         }
 
         /// <summary>
@@ -43,7 +51,7 @@ namespace BuouFramework.Tweening
                 activeTween.FullKill();
             }
 
-            await Awaitable.NextFrameAsync();
+            await Awaitable.EndOfFrameAsync();
             _activeTweens[tween.Identifier] = tween;
         }
     }

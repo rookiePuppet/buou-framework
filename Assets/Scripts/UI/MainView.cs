@@ -1,5 +1,6 @@
 using BuouFramework;
 using BuouFramework.EventSystem;
+using BuouFramework.Logging;
 using BuouFramework.Schedule;
 using BuouFramework.Tweening;
 using BuouFramework.UI;
@@ -19,26 +20,44 @@ namespace Game.UI
 
         private CountDownTimer _timer;
 
-        protected override void Start()
+        protected void Start()
         {
-            base.Start();
+            // _timer = new CountDownTimer(this,3);
+            // _timer.OnStopped(() => { print("计时结束"); })
+            //     .OnTicking(() => { timeText.text = $"{_timer.Time}"; });
+            // TimerManager.Instance.RegisterTimer(_timer);
 
-            _timer = new CountDownTimer(this,3);
-            _timer.OnStopped(() => { print("计时结束"); })
-                .OnTicking(() => { timeText.text = $"{_timer.Time}"; });
-            TimerManager.Instance.RegisterTimer(_timer);
+            startButton.onClick.AddListener(() => { UIManager.Instance.Open<GameView>(); });
 
-            startButton.onClick.AddListener(() =>
-            {
-                _timer.Reset(int.Parse(durationInputField.text));
-                _timer.Start();
-            });
+            // pauseButton.onClick.AddListener(() => { _timer.Pause(); });
+            //
+            // resumeButton.onClick.AddListener(() => { _timer.Resume(); });
 
-            pauseButton.onClick.AddListener(() => { _timer.Pause(); });
+            exitButton.onClick.AddListener(() => { UIManager.Instance.Destroy<MainView>(); });
+        }
 
-            resumeButton.onClick.AddListener(() => { _timer.Resume(); });
+        public override void OnShow()
+        {
+            base.OnShow();
+            Log.Info("OnShow", this);
+        }
 
-            exitButton.onClick.AddListener(() => { UIManager.Instance.Close<MainView>(); });
+        public override void OnHide()
+        {
+            base.OnHide();
+            Log.Info("OnHide", this);
+        }
+
+        public override void AfterShowEffect()
+        {
+            base.AfterShowEffect();
+            Log.Info("AfterShowEffect", this);
+        }
+
+        public override void AfterHideEffect()
+        {
+            base.AfterHideEffect();
+            Log.Info("AfterHideEffect", this);
         }
     }
 }

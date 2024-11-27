@@ -30,26 +30,9 @@ namespace Game
                 .SetCurrentState(idleState);
         }
 
-        private void Update()
+        private async void Update()
         {
-            if (Input.GetKey(KeyCode.D))
-            {
-                _isMoving = true;
-            }
-            else
-            {
-                _isMoving = false;
-            }
-
-            if (Input.GetKey(KeyCode.Space))
-            {
-                _isJumping = true;
-            }
-            else
-            {
-                _isJumping = false;
-            }
-
+            
             if (Input.GetKeyDown(KeyCode.N))
             {
                 var now = DateTime.Now;
@@ -61,7 +44,10 @@ namespace Game
                 UIManager.Instance.Open<MainView>();
             }
 
-            _stateMachine.Update();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                UIManager.Instance.ClearCache(true);
+            }
         }
 
         private void FixedUpdate()

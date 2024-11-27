@@ -58,6 +58,7 @@
     },
     "dotnet.defaultSolution": "Program Framework.sln",
     "cSpell.words": [
-        "Buou"
+        "Buou",
+        "Mathf"
     ]
 }

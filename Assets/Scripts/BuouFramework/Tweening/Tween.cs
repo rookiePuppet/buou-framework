@@ -7,15 +7,10 @@ namespace BuouFramework.Tweening
     public class Tween<T> : ITween
     {
         /// <summary>
-        /// 每帧更新时触发
-        /// </summary>
-        public event Action Updating;
-        
-        /// <summary>
         /// 补间完成时触发
         /// </summary>
         public event Action Completed;
-        
+
         /// <summary>
         /// 每轮完成时触发（针对循环补间）
         /// </summary>
@@ -25,9 +20,12 @@ namespace BuouFramework.Tweening
         private readonly T _endValue;
         private readonly float _duration;
         private Action<T> _tweenUpdate;
+        private Action _tweenStart;
         private EaseType _easeType = EaseType.Linear;
         private int _loopCount = 1;
         private bool _pingPong;
+        private float _delayTime;
+        private bool _hasStarted;
 
         private float _elapsedTime;
         private bool _reversed;
@@ -44,25 +42,25 @@ namespace BuouFramework.Tweening
 
             TweenManager.Instance.AddTween(this);
         }
-        
+
         public object Target { get; private set; }
         public string Identifier { get; private set; }
-        
+
         /// <summary>
         /// 是否完成
         /// </summary>
         public bool IsCompleted { get; private set; }
-        
+
         /// <summary>
         /// 是否暂停
         /// </summary>
         public bool IsPaused { get; set; }
-        
+
         /// <summary>
         /// 是否停止
         /// </summary>
         public bool WasKilled { get; private set; }
-        
+
         /// <summary>
         /// 是否忽略时间缩放
         /// </summary>
@@ -99,21 +97,31 @@ namespace BuouFramework.Tweening
             if (WasTargetDestroyed)
             {
                 FullKill();
-                Log.Info("Target has been destroy. Tween was killed.", this);
+                Log.Warning("Target has been destroy. Tween was killed.", this);
                 return;
             }
 
+            if (_delayTime > 0)
+            {
+                _delayTime -= IgnoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
+                return;
+            }
+
+            if (!_hasStarted)
+            {
+                _hasStarted = true;
+                _tweenStart?.Invoke();
+            }
+
             _elapsedTime += IgnoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
+            
             float t = _elapsedTime / _duration;
             float easedT = EaseHelper.Ease(_easeType, t);
-
             var currentValue = _reversed
                 ? Interpolate(_endValue, _startValue, easedT)
                 : Interpolate(_startValue, _endValue, easedT);
             _tweenUpdate?.Invoke(currentValue);
-
-            Updating?.Invoke();
-
+            
             // has completed one time
             if (_elapsedTime >= _duration)
             {
@@ -128,8 +136,9 @@ namespace BuouFramework.Tweening
 
                 if (_loopCompletedCount >= _loopCount && _loopCount > 0)
                 {
+                    _tweenUpdate?.Invoke(_endValue);
                     Completed?.Invoke();
-                    OnCompletedKill();
+                    CompletedKill();
                 }
             }
         }
@@ -139,11 +148,17 @@ namespace BuouFramework.Tweening
         /// </summary>
         public void FullKill()
         {
-            OnCompletedKill();
+            CompletedKill();
             Completed = null;
+            EveryTimeCompleted = null;
             WasKilled = true;
         }
 
+        /// <summary>
+        /// 设置缓动函数类型
+        /// </summary>
+        /// <param name="easeType">缓动函数类型</param>
+        /// <returns></returns>
         public Tween<T> SetEase(EaseType easeType)
         {
             _easeType = easeType;
@@ -163,12 +178,45 @@ namespace BuouFramework.Tweening
             return this;
         }
 
-        private void OnCompletedKill()
+        /// <summary>
+        /// 设置延迟启动时间
+        /// </summary>
+        /// <param name="time">延迟时间</param>
+        /// <returns></returns>
+        public Tween<T> SetDelay(float time)
+        {
+            _delayTime = time;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加更新监听函数
+        /// </summary>
+        /// <param name="action">更新监听函数</param>
+        /// <returns></returns>
+        public Tween<T> OnUpdate(Action<T> action)
+        {
+            _tweenUpdate += action;
+            return this;
+        }
+
+        /// <summary>
+        /// 添加开始监听函数
+        /// </summary>
+        /// <param name="action">开始监听函数</param>
+        /// <returns></returns>
+        public Tween<T> OnStart(Action action)
+        {
+            _tweenStart += action;
+            return this;
+        }
+
+        private void CompletedKill()
         {
             IsCompleted = true;
 
             _tweenUpdate = null;
-            Updating = null;
+            _tweenStart = null;
 
             _elapsedTime = 0f;
             _loopCount = 1;
@@ -177,7 +225,7 @@ namespace BuouFramework.Tweening
             _reversed = false;
             _easeType = EaseType.Linear;
         }
-        
+
         private T Interpolate(T start, T end, float t)
         {
             if (start is float startFloat && end is float endFloat)

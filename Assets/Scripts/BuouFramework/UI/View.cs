@@ -1,43 +1,48 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BuouFramework.UI
 {
-    [RequireComponent(typeof(CanvasGroup))]
-    public abstract class View : UIBehaviour
+    public abstract class View : MonoBehaviour
     {
-        private CanvasGroup _canvasGroup;
-        private RectTransform _rectTransform;
+        [SerializeField] protected ViewEffectTarget effectTarget;
+        [SerializeField] protected ViewEffect showEffect;
+        [SerializeField] protected ViewEffect hideEffect;
 
-        public CanvasGroup CanvasGroup
+        protected bool IsAnimating;
+
+        public virtual bool IsVisible
         {
-            get
-            {
-                if (_canvasGroup == null)
-                {
-                    _canvasGroup = GetComponent<CanvasGroup>();
-                }
-
-                return _canvasGroup;
-            }
-            protected set => _canvasGroup = value;
+            get => gameObject.activeInHierarchy;
+            set => gameObject.SetActive(value);
         }
 
-        public RectTransform RectTransform
+        public virtual async Awaitable ApplyShowEffect()
         {
-            get
-            {
-                if (_rectTransform == null)
-                {
-                    _rectTransform = GetComponent<RectTransform>();
-                }
+            if (IsAnimating) return;
+            if (effectTarget is null || showEffect is null) return;
 
-                return _rectTransform;
-            }
-            protected set => _rectTransform = value;
+            IsAnimating = true;
+            showEffect.PrepareForAnimation(effectTarget);
+            await showEffect.Apply(effectTarget);
+            IsAnimating = false;
         }
-        
-        public virtual void Show() {}
-        public virtual void Hide() {}
+
+        public virtual async Awaitable ApplyHideEffect()
+        {
+            if (IsAnimating) return;
+            if (effectTarget is null || hideEffect is null) return;
+
+            IsAnimating = true;
+            await hideEffect.Apply(effectTarget);
+            IsAnimating = false;
+        }
+
+        public virtual void OnShow() { }
+
+        public virtual void OnHide() { }
+
+        public virtual void AfterShowEffect() { }
+
+        public virtual void AfterHideEffect() { }
     }
 }

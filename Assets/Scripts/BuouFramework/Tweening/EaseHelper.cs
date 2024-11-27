@@ -10,53 +10,53 @@ namespace BuouFramework.Tweening
         public static float Ease(EaseType easeType, float t) => easeType switch
         {
             EaseType.Linear => t,
-            EaseType.QuadraticEaseIn => QuadEaseIn(t),
-            EaseType.QuadraticEaseOut => QuadEaseOut(t),
-            EaseType.QuadraticEaseInOut => QuadEaseInOut(t),
-            EaseType.CubicEaseIn => CubicEaseIn(t),
-            EaseType.CubicEaseOut => CubicEaseOut(t),
-            EaseType.CubicEaseInOut => CubicEaseInOut(t),
-            EaseType.QuarticEaseIn => QuartEaseIn(t),
-            EaseType.QuarticEaseOut => QuartEaseOut(t),
-            EaseType.QuarticEaseInOut => QuartEaseInOut(t),
-            EaseType.QuinticEaseIn => QuintEaseIn(t),
-            EaseType.QuinticEaseOut => QuintEaseOut(t),
-            EaseType.QuinticEaseInOut => QuintEaseInOut(t),
-            EaseType.SineEaseIn => SineEaseIn(t),
-            EaseType.SineEaseOut => SineEaseOut(t),
-            EaseType.SineEaseInOut => SineEaseInOut(t),
-            EaseType.CircularEaseIn => CircularEaseIn(t),
-            EaseType.CircularEaseOut => CircularEaseOut(t),
-            EaseType.CircularEaseInOut => CircularEaseInOut(t),
-            EaseType.ExponentialEaseIn => ExponentialEaseIn(t),
-            EaseType.ExponentialEaseOut => ExponentialEaseOut(t),
-            EaseType.ExponentialEaseInOut => ExponentialEaseInOut(t),
-            EaseType.ElasticEaseIn => ElasticEaseIn(t),
-            EaseType.ElasticEaseOut => ElasticEaseOut(t),
-            EaseType.ElasticEaseInOut => ElasticEaseInOut(t),
-            EaseType.BackEaseIn => BackEaseIn(t),
-            EaseType.BackEaseOut => BackEaseOut(t),
-            EaseType.BackEaseInOut => BackEaseInOut(t),
-            EaseType.BounceEaseIn => BounceEaseIn(t),
-            EaseType.BounceEaseOut => BounceEaseOut(t),
-            EaseType.BounceEaseInOut => BounceEaseInOut(t),
+            EaseType.QuadraticIn => QuadIn(t),
+            EaseType.QuadraticOut => QuadOut(t),
+            EaseType.QuadraticInOut => QuadInOut(t),
+            EaseType.CubicIn => CubicIn(t),
+            EaseType.CubicOut => CubicOut(t),
+            EaseType.CubicInOut => CubicInOut(t),
+            EaseType.QuarticIn => QuartIn(t),
+            EaseType.QuarticOut => QuartOut(t),
+            EaseType.QuarticInOut => QuartInOut(t),
+            EaseType.QuinticIn => QuintIn(t),
+            EaseType.QuinticOut => QuintOut(t),
+            EaseType.QuinticInOut => QuintInOut(t),
+            EaseType.SineIn => SineIn(t),
+            EaseType.SineOut => SineOut(t),
+            EaseType.SineInOut => SineInOut(t),
+            EaseType.CircularIn => CircularIn(t),
+            EaseType.CircularOut => CircularOut(t),
+            EaseType.CircularInOut => CircularInOut(t),
+            EaseType.ExponentialIn => ExponentialIn(t),
+            EaseType.ExponentialOut => ExponentialOut(t),
+            EaseType.ExponentialInOut => ExponentialInOut(t),
+            EaseType.ElasticIn => ElasticIn(t),
+            EaseType.ElasticOut => ElasticOut(t),
+            EaseType.ElasticInOut => ElasticInOut(t),
+            EaseType.BackIn => BackIn(t),
+            EaseType.BackOut => BackOut(t),
+            EaseType.BackInOut => BackInOut(t),
+            EaseType.BounceIn => BounceIn(t),
+            EaseType.BounceOut => BounceOut(t),
+            EaseType.BounceInOut => BounceInOut(t),
             _ => t
         };
 
         // 二次方缓入
-        public static float QuadEaseIn(float t)
+        public static float QuadIn(float t)
         {
             return t * t;
         }
 
         // 二次方缓出
-        public static float QuadEaseOut(float t)
+        public static float QuadOut(float t)
         {
             return t * (2 - t);
         }
 
         // 二次方缓入缓出
-        public static float QuadEaseInOut(float t)
+        public static float QuadInOut(float t)
         {
             if (t < 0.5f)
                 return 2 * t * t;
@@ -65,20 +65,20 @@ namespace BuouFramework.Tweening
         }
 
         // 三次方缓入
-        public static float CubicEaseIn(float t)
+        public static float CubicIn(float t)
         {
             return t * t * t;
         }
 
         // 三次方缓出
-        public static float CubicEaseOut(float t)
+        public static float CubicOut(float t)
         {
             float f = t - 1;
             return f * f * f + 1;
         }
 
         // 三次方缓入缓出
-        public static float CubicEaseInOut(float t)
+        public static float CubicInOut(float t)
         {
             if (t < 0.5f)
                 return 4 * t * t * t;
@@ -90,20 +90,20 @@ namespace BuouFramework.Tweening
         }
 
         // 四次方缓入
-        public static float QuartEaseIn(float t)
+        public static float QuartIn(float t)
         {
             return t * t * t * t;
         }
 
         // 四次方缓出
-        public static float QuartEaseOut(float t)
+        public static float QuartOut(float t)
         {
             float f = t - 1;
             return f * f * f * (1 - t) + 1;
         }
 
         // 四次方缓入缓出
-        public static float QuartEaseInOut(float t)
+        public static float QuartInOut(float t)
         {
             if (t < 0.5f)
                 return 8 * t * t * t * t;
@@ -115,20 +115,20 @@ namespace BuouFramework.Tweening
         }
 
         // 五次方缓入
-        public static float QuintEaseIn(float t)
+        public static float QuintIn(float t)
         {
             return t * t * t * t * t;
         }
 
         // 五次方缓出
-        public static float QuintEaseOut(float t)
+        public static float QuintOut(float t)
         {
             float f = t - 1;
             return f * f * f * f * f + 1;
         }
 
         // 五次方缓入缓出
-        public static float QuintEaseInOut(float t)
+        public static float QuintInOut(float t)
         {
             if (t < 0.5f)
                 return 16 * t * t * t * t * t;
@@ -140,37 +140,37 @@ namespace BuouFramework.Tweening
         }
 
         // 正弦缓入
-        public static float SineEaseIn(float t)
+        public static float SineIn(float t)
         {
             return 1 - Mathf.Cos(t * Mathf.PI / 2);
         }
 
         // 正弦缓出
-        public static float SineEaseOut(float t)
+        public static float SineOut(float t)
         {
             return Mathf.Sin(t * Mathf.PI / 2);
         }
 
         // 正弦缓入缓出
-        public static float SineEaseInOut(float t)
+        public static float SineInOut(float t)
         {
             return -(Mathf.Cos(Mathf.PI * t) - 1) / 2;
         }
 
         // 圆形缓入
-        public static float CircularEaseIn(float t)
+        public static float CircularIn(float t)
         {
             return 1 - Mathf.Sqrt(1 - t * t);
         }
 
         // 圆形缓出
-        public static float CircularEaseOut(float t)
+        public static float CircularOut(float t)
         {
             return Mathf.Sqrt((2 - t) * t);
         }
 
         // 圆形缓入缓出
-        public static float CircularEaseInOut(float t)
+        public static float CircularInOut(float t)
         {
             if (t < 0.5f)
                 return 0.5f * (1 - Mathf.Sqrt(1 - 4 * t * t));
@@ -179,19 +179,19 @@ namespace BuouFramework.Tweening
         }
 
         // 指数缓入
-        public static float ExponentialEaseIn(float t)
+        public static float ExponentialIn(float t)
         {
             return Mathf.Pow(2, 10 * (t - 1));
         }
 
         // 指数缓出
-        public static float ExponentialEaseOut(float t)
+        public static float ExponentialOut(float t)
         {
             return (-Mathf.Pow(2, -10 * t) + 1);
         }
 
         // 指数缓入缓出
-        public static float ExponentialEaseInOut(float t)
+        public static float ExponentialInOut(float t)
         {
             if (t == 0 || Mathf.Approximately(t, 1))
                 return t;
@@ -203,7 +203,7 @@ namespace BuouFramework.Tweening
         }
 
         // 弹性缓入
-        public static float ElasticEaseIn(float t)
+        public static float ElasticIn(float t)
         {
             if (t == 0 || Mathf.Approximately(t, 1))
                 return t;
@@ -212,7 +212,7 @@ namespace BuouFramework.Tweening
         }
 
         // 弹性缓出
-        public static float ElasticEaseOut(float t)
+        public static float ElasticOut(float t)
         {
             if (t == 0 || Mathf.Approximately(t, 1))
                 return t;
@@ -221,7 +221,7 @@ namespace BuouFramework.Tweening
         }
 
         // 弹性缓入缓出
-        public static float ElasticEaseInOut(float t)
+        public static float ElasticInOut(float t)
         {
             if (t == 0 || Mathf.Approximately(t, 1))
                 return t;
@@ -234,21 +234,21 @@ namespace BuouFramework.Tweening
         }
 
         // 回退缓入
-        public static float BackEaseIn(float t)
+        public static float BackIn(float t)
         {
             const float c1 = 1.70158f;
             return t * t * ((c1 + 1) * t - c1);
         }
 
         // 回退缓出
-        public static float BackEaseOut(float t)
+        public static float BackOut(float t)
         {
             const float c1 = 1.70158f;
             return (t - 1) * t * ((c1 + 1) * t + c1) + 1;
         }
 
         // 回退缓入缓出
-        public static float BackEaseInOut(float t)
+        public static float BackInOut(float t)
         {
             const float c1 = 1.70158f;
             const float c2 = c1 * 1.525f;
@@ -259,12 +259,12 @@ namespace BuouFramework.Tweening
                 return ((t - 2) * t * ((c2 + 1) * t + c2) + 2) / 2;
         }
 
-        public static float BounceEaseIn(float t)
+        public static float BounceIn(float t)
         {
-            return 1 - BounceEaseOut(1 - t);
+            return 1 - BounceOut(1 - t);
         }
 
-        public static float BounceEaseOut(float t)
+        public static float BounceOut(float t)
         {
             const float n1 = 7.5625f;
             const float d1 = 2.75f;
@@ -287,15 +287,15 @@ namespace BuouFramework.Tweening
             }
         }
 
-        public static float BounceEaseInOut(float t)
+        public static float BounceInOut(float t)
         {
             if (t < 0.5f)
             {
-                return 0.5f * (1 - BounceEaseOut(1 - 2 * t));
+                return 0.5f * (1 - BounceOut(1 - 2 * t));
             }
             else
             {
-                return 0.5f * BounceEaseOut(2 * t - 1) + 0.5f;
+                return 0.5f * BounceOut(2 * t - 1) + 0.5f;
             }
         }
     }

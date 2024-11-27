@@ -87,7 +87,7 @@ namespace BuouFramework.Audio
         /// <param name="overlap">若正在播放相同的音频，是否覆盖（重新开始）播放，默认为是</param>
         /// <param name="loop">是否循环。无论是否覆盖播放，该设置均对当前音频源有效</param>
         /// <returns></returns>
-        public Awaitable FadeInMusic(AudioClip clip, float duration, EaseType easeType = EaseType.QuarticEaseIn,
+        public Awaitable FadeInMusic(AudioClip clip, float duration, EaseType easeType = EaseType.QuarticIn,
             bool overlap = true, bool loop = true)
         {
             PlayMusicInternal(clip, true, overlap, loop);
@@ -117,7 +117,7 @@ namespace BuouFramework.Audio
         /// <param name="duration">渐出时长</param>
         /// <param name="easeType">补间函数类型</param>
         /// <returns></returns>
-        public Awaitable FadeOutCurrentMusic(float duration, EaseType easeType = EaseType.QuarticEaseOut)
+        public Awaitable FadeOutCurrentMusic(float duration, EaseType easeType = EaseType.QuarticOut)
         {
             var completeSource = new AwaitableCompletionSource();
             if (_currentMusicSource != null && _currentMusicSource.isPlaying)

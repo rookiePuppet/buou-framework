@@ -1,23 +1,32 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using BuouFramework.SingleInstance;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
+using BuouFramework.Logging;
+using BuouFramework.SingleInstance;
 
 namespace BuouFramework.UI
 {
     public class UIManager : Singleton<UIManager>
     {
-        /// <summary>
-        /// 用于缓存UI界面的字典
-        /// <para>Key->界面类型名称，Value->界面脚本</para>
-        /// </summary>
-        private readonly Dictionary<string, View> _views = new();
+        private class ViewCache
+        {
+            public View View { get; set; }
+            public AsyncOperationHandle<GameObject> AssetHandle { get; set; }
+            public bool IsOpening { get; set; }
+            public bool IsClosing { get; set; }
+        }
 
         private readonly Canvas _canvas;
+
+        /// <summary>
+        /// 用于缓存UI界面的字典
+        /// </summary>
+        private readonly Dictionary<Type, ViewCache> _caches = new();
+
         private readonly Dictionary<int, Transform> _layerTransforms = new();
 
         private UIManager()
@@ -45,43 +54,41 @@ namespace BuouFramework.UI
         }
 
         /// <summary>
-        /// 打开UI动画时长
-        /// </summary>
-        public float OpenViewDuration { get; set; } = IViewEffect.ShortDuration;
-
-        /// <summary>
-        /// 关闭UI动画时长
-        /// </summary>
-        public float CloseViewDuration { get; set; } = IViewEffect.ShortDuration;
-
-        /// <summary>
         /// 通过异步加载并打开一个UI界面
         /// </summary>
         /// <param name="loaded">UI预制体加载完成的回调</param>
         /// <param name="layer">UI所在层级</param>
-        /// <param name="effect">动画效果</param>
         /// <typeparam name="T">UI界面类型</typeparam>
-        public async void Open<T>(Action<T> loaded = null, UILayer layer = UILayer.Middle,
-            IViewEffect effect = null) where T : View
+        public async void Open<T>(Action<T> loaded = null, UILayer layer = UILayer.Middle) where T : View
         {
-            var viewName = typeof(T).Name;
-
-            if (!_views.TryGetValue(viewName, out var view))
+            // 还未加载，不在缓存当中
+            if (!_caches.TryGetValue(typeof(T), out var cache))
             {
-                var handle = Addressables.LoadAssetAsync<GameObject>(viewName);
-                var obj = Object.Instantiate(await handle.Task, GetLayerTransform(layer));
-                view = obj.GetComponent<T>();
-                _views.Add(viewName, view);
+                cache = new ViewCache();
+                cache.AssetHandle = Addressables.LoadAssetAsync<GameObject>(typeof(T).Name);
+                _caches.Add(typeof(T), cache);
 
-                handle.Release();
+                var prefab = await cache.AssetHandle.Task;
+                var obj = Object.Instantiate(prefab, GetLayerTransform(layer));
+                cache.View = obj.GetComponent<T>();
             }
 
-            loaded?.Invoke(view as T);
-            view.gameObject.SetActive(true);
-            view.Show();
+            // 已经正在加载并等待界面显示，此次打开无效
+            if (!cache.AssetHandle.IsDone) return;
+            if (cache.IsOpening)
+            {
+                Log.Warning($"{typeof(T).Name} is opening. You're trying to open it repeatedly.", this);
+                return;
+            }
 
-            effect ??= new FadeEffect(FadeType.In, OpenViewDuration);
-            effect.ApplyTo(view);
+            loaded?.Invoke(cache.View as T);
+
+            cache.IsOpening = true;
+            cache.View.IsVisible = true;
+            cache.View.OnShow();
+            await cache.View.ApplyShowEffect();
+            cache.View.AfterShowEffect();
+            cache.IsOpening = false;
         }
 
         /// <summary>
@@ -91,21 +98,28 @@ namespace BuouFramework.UI
         /// <typeparam name="T">界面类型</typeparam>
         public async void Close<T>(bool destroy = false) where T : View
         {
-            var viewName = typeof(T).Name;
-            if (!_views.TryGetValue(viewName, out var view))
+            if (!HasLoaded(typeof(T), out var cache)) return;
+            if (cache.IsClosing)
             {
+                Log.Warning($"{typeof(T).Name} is closing. You're trying to close it repeatedly.", this);
                 return;
             }
 
-            var effect = new FadeEffect(FadeType.Out, CloseViewDuration);
-            await effect.ApplyTo(view);
-
-            view.Hide();
-            view.gameObject.SetActive(false);
-
             if (destroy)
             {
-                Object.Destroy(view.gameObject);
+                _caches.Remove(typeof(T));
+            }
+
+            cache.IsClosing = true;
+            cache.View.OnHide();
+            await cache.View.ApplyHideEffect();
+            cache.View.AfterHideEffect();
+            cache.View.IsVisible = false;
+            cache.IsClosing = false;
+            if (destroy)
+            {
+                Object.Destroy(cache.View.gameObject);
+                cache.AssetHandle.Release();
             }
         }
 
@@ -115,59 +129,55 @@ namespace BuouFramework.UI
         /// </summary>
         /// <typeparam name="T">界面类型</typeparam>
         /// <returns>界面脚本实例</returns>
-        public T Get<T>() where T : View
-        {
-            var viewName = typeof(T).Name;
-
-            if (_views.TryGetValue(viewName, out var view))
-            {
-                return view as T;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        public T Get<T>() where T : View => HasLoaded(typeof(T), out var cache) ? cache.View as T : null;
 
         /// <summary>
         /// 判断界面是否正在显示
         /// </summary>
         /// <typeparam name="T">界面类型</typeparam>
         /// <returns></returns>
-        public bool IsShowing<T>() where T : View
+        public bool IsShowing<T>() where T : View => HasLoaded(typeof(T), out var cache) && cache.View.IsVisible;
+
+        /// <summary>
+        /// 直接销毁界面
+        /// </summary>
+        /// <typeparam name="T">界面类型</typeparam>
+        public void Destroy<T>() where T : View
         {
-            var viewName = typeof(T).Name;
-            return _views.TryGetValue(viewName, out var view) && view.gameObject.activeInHierarchy;
+            if (!HasLoaded(typeof(T), out var cache)) return;
+
+            Object.Destroy(cache.View.gameObject);
+            cache.AssetHandle.Release();
+            _caches.Remove(typeof(T));
         }
 
         /// <summary>
         /// 将缓存中不在显示的界面对象销毁并清理掉它们的缓存
         /// </summary>
-        public void ClearCache()
+        public void ClearCache(bool clearAll = false)
         {
-            var clearing = (
-                from name in _views.Keys
-                let view = _views[name]
-                where !view.gameObject.activeInHierarchy
-                select name
-            ).ToList();
-
-            foreach (var name in clearing)
+            var clearing = new List<ViewCache>();
+            foreach (var cache in _caches.Values)
             {
-                Object.Destroy(_views[name]);
-                _views.Remove(name);
+                if (!cache.View.IsVisible || clearAll)
+                {
+                    clearing.Add(cache);
+                }
+            }
+
+            foreach (var cache in clearing)
+            {
+                Object.Destroy(cache.View.gameObject);
+                cache.AssetHandle.Release();
+                _caches.Remove(cache.View.GetType());
             }
         }
 
-        /// <summary>
-        /// 获取指定层级的Transform对象
-        /// </summary>
-        /// <param name="layer">UI层级</param>
-        /// <returns></returns>
-        private Transform GetLayerTransform(UILayer layer)
-        {
-            return _layerTransforms.TryGetValue((int)layer, out var transform) ? transform : _canvas.transform;
-        }
+        private bool HasLoaded(Type viewType, out ViewCache cache) =>
+            _caches.TryGetValue(viewType, out cache) && cache.AssetHandle.IsDone;
+
+        private Transform GetLayerTransform(UILayer layer) =>
+            _layerTransforms.TryGetValue((int)layer, out var transform) ? transform : _canvas.transform;
 
         private void InitializeLayer()
         {
