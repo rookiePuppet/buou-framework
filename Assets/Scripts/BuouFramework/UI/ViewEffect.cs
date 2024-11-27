@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using BuouFramework.Logging;
+using BuouFramework.UI.Animation;
 using UnityEngine;
 
 namespace BuouFramework.UI

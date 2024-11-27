@@ -1,7 +1,7 @@
 ﻿using BuouFramework.Tweening;
 using UnityEngine;
 
-namespace BuouFramework.UI
+namespace BuouFramework.UI.Animation
 {
     [System.Serializable]
     public abstract class PropertyAnimation<T>

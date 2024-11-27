@@ -1,6 +1,6 @@
 ﻿using BuouFramework.Tweening;
 
-namespace BuouFramework.UI
+namespace BuouFramework.UI.Animation
 {
     [System.Serializable]
     public class AlphaAnimation : PropertyAnimation<float>

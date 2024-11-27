@@ -2,7 +2,7 @@
 using BuouFramework.Tweening;
 using UnityEngine;
 
-namespace BuouFramework.UI
+namespace BuouFramework.UI.Animation
 {
     [System.Serializable]
     public class PositionAnimation : PropertyAnimation<Vector2>
