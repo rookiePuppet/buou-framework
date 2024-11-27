@@ -1,39 +1,46 @@
+using BuouFramework.Logging;
 using UnityEngine;
 
 namespace BuouFramework.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class ViewEffectTarget : MonoBehaviour
+    public sealed class ViewEffectTarget : MonoBehaviour
     {
+        [SerializeField] private ViewEffect showEffect;
+        [SerializeField] private ViewEffect hideEffect;
+
         private CanvasGroup _canvasGroup;
         private RectTransform _rectTransform;
+        private bool _isAnimating;
 
-        public CanvasGroup CanvasGroup
+        public CanvasGroup CanvasGroup => _canvasGroup ??= GetComponent<CanvasGroup>();
+        public RectTransform RectTransform => _rectTransform ??= GetComponent<RectTransform>();
+        public ViewEffect ShowEffect => showEffect;
+        public ViewEffect HideEffect => hideEffect;
+
+        public async Awaitable ApplyShowEffect()
         {
-            get
-            {
-                if (_canvasGroup == null)
-                {
-                    _canvasGroup = GetComponent<CanvasGroup>();
-                }
+            if (_isAnimating || showEffect is null) return;
 
-                return _canvasGroup;
-            }
-            protected set => _canvasGroup = value;
+            _isAnimating = true;
+            showEffect.PrepareForAnimation(this);
+            await showEffect.Apply(this);
+            _isAnimating = false;
         }
 
-        public RectTransform RectTransform
+        public async Awaitable ApplyHideEffect()
         {
-            get
+            if (_isAnimating || hideEffect is null)
             {
-                if (_rectTransform == null)
-                {
-                    _rectTransform = GetComponent<RectTransform>();
-                }
-
-                return _rectTransform;
+                Log.Info($"{_isAnimating} || {hideEffect is null}");
+                return;
             }
-            protected set => _rectTransform = value;
+
+            _isAnimating = true;
+            Log.Info("Apply Hide Effect", this);
+            await hideEffect.Apply(this);
+            Log.Info("Hide Effect Finished", this);
+            _isAnimating = false;
         }
     }
 }

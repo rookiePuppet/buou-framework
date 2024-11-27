@@ -12,7 +12,7 @@ namespace BuouFramework.UI.Editor
         public override VisualElement CreateInspectorGUI()
         {
             var root = new VisualElement { style = { flexDirection = FlexDirection.Column, flexGrow = 1 } };
-            var button = new Button { text = "搜索并关联UI组件" };
+            var button = new Button { text = "Auto bind components" };
             root.Add(button);
             button.clicked += ReferenceComponents;
             

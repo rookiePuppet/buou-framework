@@ -81,13 +81,18 @@ namespace BuouFramework.UI
                 return;
             }
 
-            loaded?.Invoke(cache.View as T);
-
+            var view = cache.View;
             cache.IsOpening = true;
-            cache.View.IsVisible = true;
-            cache.View.OnShow();
-            await cache.View.ApplyShowEffect();
-            cache.View.AfterShowEffect();
+            loaded?.Invoke(view as T);
+
+            view.IsVisible = true;
+            view.OnShow();
+            if (view.HasEffect)
+            {
+                await view.EffectTarget.ApplyShowEffect();
+            }
+
+            view.AfterShowEffect();
             cache.IsOpening = false;
         }
 
@@ -110,15 +115,20 @@ namespace BuouFramework.UI
                 _caches.Remove(typeof(T));
             }
 
+            var view = cache.View;
             cache.IsClosing = true;
-            cache.View.OnHide();
-            await cache.View.ApplyHideEffect();
-            cache.View.AfterHideEffect();
-            cache.View.IsVisible = false;
+            view.OnHide();
+            if (view.HasEffect)
+            {
+                await view.EffectTarget.ApplyHideEffect();
+            }
+
+            view.AfterHideEffect();
+            view.IsVisible = false;
             cache.IsClosing = false;
             if (destroy)
             {
-                Object.Destroy(cache.View.gameObject);
+                Object.Destroy(view.gameObject);
                 cache.AssetHandle.Release();
             }
         }

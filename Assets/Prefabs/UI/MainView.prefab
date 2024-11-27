@@ -738,8 +738,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectTarget: {fileID: 1608064660433067599}
-  showEffect: {fileID: 11400000, guid: 4d9ca09bb92bd1541b2ed8190743c8dd, type: 2}
-  hideEffect: {fileID: 11400000, guid: 8086ad6a3c2a6624db28571d4ffdf658, type: 2}
   startButton: {fileID: 1748809272436331513}
   exitButton: {fileID: 358021157568544737}
   settingsButton: {fileID: 4660902841361990672}
@@ -851,6 +849,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf0a9f74a6adaf458dbaad48dd5c3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showEffect: {fileID: 11400000, guid: 4d9ca09bb92bd1541b2ed8190743c8dd, type: 2}
+  hideEffect: {fileID: 11400000, guid: 8086ad6a3c2a6624db28571d4ffdf658, type: 2}
 --- !u!1 &8376636393833145125
 GameObject:
   m_ObjectHideFlags: 0

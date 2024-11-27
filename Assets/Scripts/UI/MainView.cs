@@ -33,7 +33,7 @@ namespace Game.UI
             //
             // resumeButton.onClick.AddListener(() => { _timer.Resume(); });
 
-            exitButton.onClick.AddListener(() => { UIManager.Instance.Destroy<MainView>(); });
+            exitButton.onClick.AddListener(() => { UIManager.Instance.Close<MainView>(); });
         }
 
         public override void OnShow()

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BuouFramework.UI
 {
     [CreateAssetMenu(menuName = "UI/ViewEffect")]
-    public class ViewEffect : ScriptableObject
+    public sealed class ViewEffect : ScriptableObject
     {
         [SerializeField] private List<AlphaAnimation> alphaAnimations;
         [SerializeField] private List<ScaleAnimation> scaleAnimations;

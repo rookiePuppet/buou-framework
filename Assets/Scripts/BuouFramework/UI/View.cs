@@ -4,11 +4,8 @@ namespace BuouFramework.UI
 {
     public abstract class View : MonoBehaviour
     {
-        [SerializeField] protected ViewEffectTarget effectTarget;
-        [SerializeField] protected ViewEffect showEffect;
-        [SerializeField] protected ViewEffect hideEffect;
-
-        protected bool IsAnimating;
+        [Header("Components")] [SerializeField]
+        protected ViewEffectTarget effectTarget;
 
         public virtual bool IsVisible
         {
@@ -16,26 +13,8 @@ namespace BuouFramework.UI
             set => gameObject.SetActive(value);
         }
 
-        public virtual async Awaitable ApplyShowEffect()
-        {
-            if (IsAnimating) return;
-            if (effectTarget is null || showEffect is null) return;
-
-            IsAnimating = true;
-            showEffect.PrepareForAnimation(effectTarget);
-            await showEffect.Apply(effectTarget);
-            IsAnimating = false;
-        }
-
-        public virtual async Awaitable ApplyHideEffect()
-        {
-            if (IsAnimating) return;
-            if (effectTarget is null || hideEffect is null) return;
-
-            IsAnimating = true;
-            await hideEffect.Apply(effectTarget);
-            IsAnimating = false;
-        }
+        public ViewEffectTarget EffectTarget => effectTarget;
+        public bool HasEffect => effectTarget is not null;
 
         public virtual void OnShow() { }
 

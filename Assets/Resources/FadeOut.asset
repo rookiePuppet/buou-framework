@@ -17,7 +17,7 @@ MonoBehaviour:
     endValue: 0
     easeType: 11
     startTime: 0
-    endTime: 0.3
+    endTime: 0.4
   scaleAnimations: []
   positionAnimations: []
   rotationAnimations: []
