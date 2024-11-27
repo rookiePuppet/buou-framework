@@ -10,14 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 651a789bea366524fa0bafb2c11778e5, type: 3}
-  m_Name: FadeOut
+  m_Name: 'Fade&Zoom[In]'
   m_EditorClassIdentifier: 
   alphaAnimations:
-  - startValue: 1
-    endValue: 0
-    easeType: 11
+  - startValue: 0
+    endValue: 1
+    easeType: 3
     startTime: 0
-    endTime: 0.4
-  scaleAnimations: []
+    endTime: 0.6
+  scaleAnimations:
+  - startValue: {x: 0, y: 0, z: 1}
+    endValue: {x: 1, y: 1, z: 1}
+    easeType: 14
+    startTime: 0
+    endTime: 0.35
   positionAnimations: []
   rotationAnimations: []

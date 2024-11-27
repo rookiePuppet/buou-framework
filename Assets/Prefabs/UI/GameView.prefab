@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 5797803784349071029}
   - component: {fileID: 8943193489026532161}
   - component: {fileID: 744098534697325035}
-  - component: {fileID: 6705437025563853860}
+  - component: {fileID: 77270305721281123}
   m_Layer: 5
   m_Name: GameView
   m_TagString: Untagged
@@ -470,9 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306916055c41faa4f8b9cd471a427928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectTarget: {fileID: 6705437025563853860}
-  showEffect: {fileID: 11400000, guid: 960af7b7b5151f341a3e92699513b44d, type: 2}
-  hideEffect: {fileID: 11400000, guid: 8086ad6a3c2a6624db28571d4ffdf658, type: 2}
+  effectTarget: {fileID: 77270305721281123}
   settingsButton: {fileID: 8905108765523056929}
   exitButton: {fileID: 3123923210778134146}
 --- !u!225 &744098534697325035
@@ -487,7 +485,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6705437025563853860
+--- !u!114 &77270305721281123
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -499,6 +497,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf0a9f74a6adaf458dbaad48dd5c3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showEffect: {fileID: 11400000, guid: 4d9ca09bb92bd1541b2ed8190743c8dd, type: 2}
+  hideEffect: {fileID: 11400000, guid: 8086ad6a3c2a6624db28571d4ffdf658, type: 2}
 --- !u!1 &8818764325131066109
 GameObject:
   m_ObjectHideFlags: 0

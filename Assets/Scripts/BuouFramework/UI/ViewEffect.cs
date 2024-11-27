@@ -31,6 +31,8 @@ namespace BuouFramework.UI
 
         private static void Apply<T>(ViewEffectTarget target, PropertyAnimation<T> animation, ref float destinationTime)
         {
+            if (animation.Duration == 0) return;
+            
             animation.Apply(target);
             destinationTime = Mathf.Max(animation.endTime, destinationTime);
         }

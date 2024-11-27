@@ -1,8 +1,8 @@
-using BuouFramework.Logging;
 using UnityEngine;
 
 namespace BuouFramework.UI
 {
+    [ExecuteInEditMode]
     [RequireComponent(typeof(CanvasGroup))]
     public sealed class ViewEffectTarget : MonoBehaviour
     {
@@ -30,17 +30,19 @@ namespace BuouFramework.UI
 
         public async Awaitable ApplyHideEffect()
         {
-            if (_isAnimating || hideEffect is null)
-            {
-                Log.Info($"{_isAnimating} || {hideEffect is null}");
-                return;
-            }
+            if (_isAnimating || hideEffect is null) return;
 
             _isAnimating = true;
-            Log.Info("Apply Hide Effect", this);
             await hideEffect.Apply(this);
-            Log.Info("Hide Effect Finished", this);
             _isAnimating = false;
         }
+
+#if UNITY_EDITOR
+        private void Awake()
+        {
+            showEffect ??= Resources.Load<ViewEffect>("ViewEffect/Fade&Zoom[In]");
+            hideEffect ??= Resources.Load<ViewEffect>("ViewEffect/Fade&Zoom[Out]");
+        }
+#endif
     }
 }

@@ -21,6 +21,8 @@ namespace BuouFramework.UI.Editor
             return root;
         }
         
+        
+        
         private void ReferenceComponents()
         {
             var obj = ((View)target).gameObject;
