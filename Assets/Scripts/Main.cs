@@ -2,6 +2,7 @@
 using BuouFramework.AIControl.FiniteStateMachine;
 using BuouFramework.Logging;
 using BuouFramework.Schedule;
+using BuouFramework.Tweening;
 using BuouFramework.UI;
 using Game.UI;
 using UnityEngine;
