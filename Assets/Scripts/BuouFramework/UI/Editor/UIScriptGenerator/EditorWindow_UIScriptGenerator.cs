@@ -23,7 +23,7 @@ namespace BuouFramework.UI.Editor
         private string _savePath = $"{Application.dataPath}/Scripts/UI";
         private StyleSheet _styleSheet;
 
-        [MenuItem("Puppet Toolkit/UI Script Generator")]
+        [MenuItem("Window/UI Script Generator")]
         public static void OpenWindow()
         {
             var window = GetWindow<EditorWindow_UIScriptGenerator>();
