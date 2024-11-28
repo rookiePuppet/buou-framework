@@ -40,8 +40,8 @@ namespace BuouFramework.UI.Editor
         public void CreateGUI()
         {
             var topLayout = new VisualElement { style = { flexDirection = FlexDirection.Row } };
-            _folderLabel = new Label(_savePath) { style = { unityTextAlign = TextAnchor.MiddleLeft } };
-            var chooseFolderButton = new Button { text = "选择目录" };
+            _folderLabel = new Label($"保存目录：{_savePath}") { style = { unityTextAlign = TextAnchor.MiddleLeft } };
+            var chooseFolderButton = new Button { text = "更改" };
             topLayout.Add(_folderLabel);
             topLayout.Add(chooseFolderButton);
             rootVisualElement.Add(topLayout);
@@ -74,6 +74,7 @@ namespace BuouFramework.UI.Editor
 
             leftPane.Add(_elementsListView);
             _elementsListView.onRemove += OnElementListItemRemoved;
+            _elementsListView.selectedIndicesChanged += OnElementListSelectionChanged;
 
             // 生成和保存脚本
             var bottomLayout = new VisualElement { style = { flexDirection = FlexDirection.Row } };
@@ -104,17 +105,6 @@ namespace BuouFramework.UI.Editor
         {
             _savePath = EditorUtility.SaveFolderPanel("选择脚本存储位置", _savePath, string.Empty);
             _folderLabel.text = _savePath;
-        }
-
-        private void OnElementListItemRemoved(BaseListView view)
-        {
-            foreach (var index in view.selectedIndices.Reverse())
-            {
-                _foundComponents.RemoveAt(index);
-            }
-
-            view.RefreshItems();
-            view.ClearSelection();
         }
 
         private void OnSetCurrentSelectedButtonClicked()
@@ -178,20 +168,6 @@ namespace BuouFramework.UI.Editor
             _scriptField.value = _generator.GetBaseScript(_targetObjectField.value.name, _foundComponents);
         }
 
-        private void BindElementsListItem(VisualElement root, int index)
-        {
-            var data = _foundComponents[index];
-            var label = root.Q<Label>();
-            label.text = $"[{data.ScriptType.Name}] {data.Name} ";
-        }
-
-        private VisualElement CreateElementsListItem()
-        {
-            var item = new VisualElement();
-            item.Add(new Label { style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } });
-            return item;
-        }
-
         private void OnTargetFieldChanged(ChangeEvent<Object> e)
         {
             var newObject = e.newValue as GameObject;
@@ -203,6 +179,41 @@ namespace BuouFramework.UI.Editor
             _foundComponents.Clear();
             _foundComponents.AddRange(UIAutomationUtility.FindAllUIComponents(newObject));
             _elementsListView.Rebuild();
+        }
+
+        private void OnElementListItemRemoved(BaseListView view)
+        {
+            foreach (var index in view.selectedIndices.Reverse())
+            {
+                _foundComponents.RemoveAt(index);
+            }
+
+            view.RefreshItems();
+            view.ClearSelection();
+        }
+
+        private void OnElementListSelectionChanged(IEnumerable<int> selectedIndies)
+        {
+            if (_targetObjectField.value is null) return;
+
+            var selectedIndex = selectedIndies.FirstOrDefault();
+            var gameObject = _foundComponents[selectedIndex].Script.gameObject;
+            Selection.SetActiveObjectWithContext(gameObject, Selection.activeContext);
+        }
+
+        private void BindElementsListItem(VisualElement root, int index)
+        {
+            var data = _foundComponents[index];
+            var label = root.Q<Label>();
+            //label.text = $"<color=#0000FF>[{data.ScriptType.Name}]</color> {data.Name} ";
+            label.text = $"<b>[{data.ScriptType.Name}]</b> {data.Name} ";
+        }
+
+        private VisualElement CreateElementsListItem()
+        {
+            var item = new VisualElement();
+            item.Add(new Label { style = { flexGrow = 1, unityTextAlign = TextAnchor.MiddleLeft } });
+            return item;
         }
     }
 }
